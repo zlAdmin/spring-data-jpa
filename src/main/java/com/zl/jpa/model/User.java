@@ -2,10 +2,10 @@ package com.zl.jpa.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author zhanglei
@@ -17,11 +17,16 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-public class User {
+@Table(name = "user")
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    @Column(name="id")
+    private String id;
 
     private String userName;
 

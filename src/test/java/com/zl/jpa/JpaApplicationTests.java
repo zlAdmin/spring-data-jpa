@@ -7,9 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 
 import javax.annotation.Resource;
+import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
@@ -59,7 +62,7 @@ class JpaApplicationTests {
      * @Author zhanglei
      * @Date 15:08 2019/11/22
      * @Param []
-     **/
+     */
     @Test
     public void matchStartingStringsIgnoreCase() {
         User user = new User();
@@ -96,6 +99,46 @@ class JpaApplicationTests {
     public void getPage() {
         Page<User> page = userRepository.findByUserName("aa", PageRequest.of(0, 2));
         System.out.println(page.getTotalPages());
+    }
+
+    @Test
+    public void findOne() {
+        Optional<User> optional = userRepository.findById("1");
+        boolean present = optional.isPresent();
+        if (present) {
+            User user = optional.get();
+            assertThat(user.getId().equals(1L));
+        }
+    }
+
+    /**
+     * @Description 原生sql查询
+     * @return void
+     * @throws 
+     * @Author zhanglei
+     * @Date 17:54 2019/12/18
+     * @Param []
+     **/
+    @Test
+    public void createSQLNativeQueryTest() {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT ");
+        sql.append(" 	u.id, ");
+        sql.append(" 	u.nick_name  ");
+        sql.append(" FROM ");
+        sql.append(" 	`user` AS u  ");
+        sql.append(" WHERE ");
+        sql.append(" 	u .id = ? ");
+        String id = "1";
+        Query sqlNativeQuery = userRepository.createSQLNativeQuery(sql.toString(), id);
+        List resultList = sqlNativeQuery.getResultList();
+        for (int i = 0; i < resultList.size(); i++) {
+            Object[] objs = (Object[])resultList.get(i);
+            User u = new User();
+            u.setId(Objects.toString(objs[0], ""));
+            u.setNickName(Objects.toString(objs[1], ""));
+            resultList.set(i, u);
+        }
     }
 
 }
