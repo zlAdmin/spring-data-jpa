@@ -7,7 +7,6 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 自定义jpa查询
@@ -39,9 +38,17 @@ public interface IRepository <T, ID extends Serializable> extends JpaRepository<
      */
     List find(final String hql, final Object... values);
 
-
+    
     Page pagedNativeQuery(final String sql, final QueryMap qm, final Object... values);
 
+    /**
+     * @Description 原生hql执行
+     * @return org.hibernate.query.Query
+     * @throws 
+     * @Author zhanglei
+     * @Date 18:49 2019/12/18
+     * @Param [hql, values]
+     **/
     Query createQuery(String hql, Object... values);
 
     /**
