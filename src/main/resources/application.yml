@@ -6,6 +6,10 @@ spring:
     url: jdbc:mysql://localhost:3306/test_jpa?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
     username: root
     password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 30
+    minIdle: 30
+    maxActive: 100
   jpa:
     properties:
       hibernate:
@@ -14,3 +18,9 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         format_sql: true
     show-sql: true
+zl:
+  druid:
+    deny: 10.8.3.111
+    allow: 10.8.3.110
+    username: zlAdmin
+    password: 123456
